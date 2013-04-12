@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 import cs4103.exceptions.DataException;
 
-public class Reader {
+public class Reader implements IReader {
 
 	private static BufferedReader getReader(String filename)
 			throws FileNotFoundException {
@@ -19,7 +19,7 @@ public class Reader {
 
 	}
 
-	public static LinkedList<Integer> readDataFromDisk(String filename)
+	public LinkedList<Integer> readDataFromDisk(String filename)
 			throws DataException {
 
 		BufferedReader reader = null;

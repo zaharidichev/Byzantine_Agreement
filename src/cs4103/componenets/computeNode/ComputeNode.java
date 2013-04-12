@@ -2,15 +2,15 @@ package cs4103.componenets.computeNode;
 
 import java.util.LinkedList;
 
-import cs4103.componenets.masterNode.MasterNode;
+import cs4103.componenets.masterNode.IMasterNode;
 
 public class ComputeNode extends Thread implements IComputeNode {
 
 	private LinkedList<Integer> data;
 	private ComputeNodeID id;
-	private MasterNode parentNode;
+	private IMasterNode parentNode;
 
-	public ComputeNode(LinkedList<Integer> data, int numberID, MasterNode parent) {
+	public ComputeNode(LinkedList<Integer> data, int numberID, IMasterNode parent) {
 		super();
 		this.parentNode = parent;
 		this.data = data;

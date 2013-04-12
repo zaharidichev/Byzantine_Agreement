@@ -12,10 +12,10 @@ public class WorkEntity implements IWorkEntity{
 
 	private LinkedList<Integer> data;
 
-	public WorkEntity(String dataFile, int numberOfWorkers) {
+	public WorkEntity(String dataFile, int numberOfWorkers, IReader dataReader) {
 		this.file = dataFile;
 		try {
-			this.data = Reader.readDataFromDisk(this.file);
+			this.data = dataReader.readDataFromDisk(this.file);
 		} catch (DataException e) {
 			System.out.println("Exitting after fatal error {" + e.getMessage()
 					+ "}");

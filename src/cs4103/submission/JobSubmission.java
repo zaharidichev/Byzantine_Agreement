@@ -3,6 +3,8 @@ package cs4103.submission;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import cs4103.componenets.computeNode.factories.ComputeNodeFactory;
+import cs4103.componenets.masterNode.IMasterNode;
 import cs4103.componenets.masterNode.MasterNode;
 import cs4103.exceptions.MasterNodeException;
 
@@ -28,7 +30,7 @@ public class JobSubmission implements IJobSubmission {
 
 	@Override
 	public int submitJob(String filename) {
-		MasterNode master = new MasterNode(this.numNodes, filename);
+		IMasterNode master = new MasterNode(this.numNodes, filename, new ComputeNodeFactory());
 		master.StartComputeNodes();
 		while (!master.isReady()) {
 			System.out.println("Waiting...");
