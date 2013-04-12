@@ -8,5 +8,8 @@ public interface IReader {
 
 	public LinkedList<Integer> readDataFromDisk(String filename)
 			throws DataException;
+	
+	
+	
 
 }
