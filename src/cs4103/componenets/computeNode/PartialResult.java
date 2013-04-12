@@ -1,4 +1,8 @@
-public class PartialResult {
+package cs4103.componenets.computeNode;
+
+import cs4103.utils.Utils;
+
+public class PartialResult implements IPartialResult {
 	private int value;
 	private ComputeNodeID nodeID;
 	private String timeStamp;

@@ -1,20 +1,29 @@
+package cs4103.componenets.masterNode;
+
 import java.util.HashSet;
 import java.util.LinkedList;
+
+import cs4103.componenets.computeNode.ComputeNode;
+import cs4103.componenets.computeNode.IComputeNode;
+import cs4103.componenets.computeNode.IPartialResult;
+import cs4103.exceptions.MasterNodeException;
+import cs4103.utils.IWorkEntity;
+import cs4103.utils.WorkEntity;
 
 public class MasterNode {
 
 	private int result;
 	int numNodes;
-	private WorkEntity allTheWork;
-	private HashSet<ComputeNode> listOfNodes;
-	private LinkedList<PartialResult> partialResults;
+	private IWorkEntity allTheWork;
+	private HashSet<IComputeNode> listOfNodes;
+	private LinkedList<IPartialResult> partialResults;
 
 	private int numOfFinished;
 
 	public MasterNode(int numNodes, String dataFile) {
 		this.allTheWork = new WorkEntity(dataFile, numNodes);
-		this.listOfNodes = new HashSet<ComputeNode>();
-		this.partialResults = new LinkedList<PartialResult>();
+		this.listOfNodes = new HashSet<IComputeNode>();
+		this.partialResults = new LinkedList<IPartialResult>();
 
 		this.numNodes = numNodes;
 		this.result = 0;
@@ -33,7 +42,7 @@ public class MasterNode {
 		}
 	}
 
-	public synchronized void submitResult(PartialResult result) {
+	public synchronized void submitResult(IPartialResult result) {
 		System.out.println("received: " + result);
 		numOfFinished++;
 		this.partialResults.add(result);
@@ -45,7 +54,7 @@ public class MasterNode {
 	}
 
 	private void computeFinal() {
-		for (PartialResult partial : this.partialResults) {
+		for (IPartialResult partial : this.partialResults) {
 			this.result += partial.getValue();
 		}
 	}

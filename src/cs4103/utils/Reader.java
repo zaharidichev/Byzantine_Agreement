@@ -1,8 +1,12 @@
+package cs4103.utils;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
+
+import cs4103.exceptions.DataException;
 
 public class Reader {
 

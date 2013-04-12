@@ -1,3 +1,4 @@
+package cs4103.componenets.computeNode;
 public class ComputeNodeID {
 
 	private String idString;

@@ -1,3 +1,4 @@
+package cs4103.submission;
 public interface IJobSubmission {
 	/*
 	 * Your solution is required to implement this interface. You should have a

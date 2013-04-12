@@ -1,6 +1,10 @@
+package cs4103.componenets.computeNode;
+
 import java.util.LinkedList;
 
-public class ComputeNode extends Thread {
+import cs4103.componenets.masterNode.MasterNode;
+
+public class ComputeNode extends Thread implements IComputeNode {
 
 	private LinkedList<Integer> data;
 	private ComputeNodeID id;
@@ -46,7 +50,7 @@ public class ComputeNode extends Thread {
 		return true;
 	}
 
-	private boolean sendResultToMasterNode(PartialResult result) {
+	public boolean sendResultToMasterNode(IPartialResult result) {
 		this.parentNode.submitResult(result);
 		return true;
 	}

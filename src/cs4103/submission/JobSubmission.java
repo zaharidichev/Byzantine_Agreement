@@ -1,5 +1,10 @@
+package cs4103.submission;
+
 import java.util.HashSet;
 import java.util.LinkedList;
+
+import cs4103.componenets.masterNode.MasterNode;
+import cs4103.exceptions.MasterNodeException;
 
 public class JobSubmission implements IJobSubmission {
 

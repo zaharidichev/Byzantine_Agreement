@@ -1,3 +1,4 @@
+package cs4103.exceptions;
 
 public class MasterNodeException extends Exception {
 	

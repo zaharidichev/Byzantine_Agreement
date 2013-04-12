@@ -1,5 +1,7 @@
 import java.util.LinkedList;
 
+import cs4103.submission.JobSubmission;
+
 public class Mainer {
 
 	/**

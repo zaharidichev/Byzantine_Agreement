@@ -1,6 +1,9 @@
+package cs4103.utils;
 import java.util.LinkedList;
 
-public class WorkEntity {
+import cs4103.exceptions.DataException;
+
+public class WorkEntity implements IWorkEntity{
 
 	private int numWorkers;
 	private int computationalUnitsPerWorker;
