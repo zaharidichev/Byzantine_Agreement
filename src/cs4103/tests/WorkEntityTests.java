@@ -1,4 +1,4 @@
-/*package cs4103.tests;
+package cs4103.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -22,6 +22,7 @@ enum WorkUnits {
 
 public class WorkEntityTests {
 
+	private int numberOfWorkUnits;
 	IWorkEntity workEntity;
 	private IReader mockedReader;
 	private final Mockery context = new JUnit4Mockery(); // the mockery
@@ -35,41 +36,39 @@ public class WorkEntityTests {
 		return result;
 	}
 
-	private IWorkEntity constructWorkEntity(WorkUnits integersToSum,
-			int numNodes) {
+	private IWorkEntity constructWorkEntity(int WorkUnits, int numNodes) {
+		this.numberOfWorkUnits = WorkUnits;
+		try {
+			buildExpectations();
+		} catch (DataException e) {
+			System.out.println("Ignored {" + e.getMessage() + "}");
+		}
+		return new WorkEntity(numNodes, mockedReader);
 
-		return new WorkEntity(integersToSum.toString(), numNodes, mockedReader);
 	}
 
 	@Before
 	public void init() throws DataException {
 		mockedReader = context.mock(IReader.class);
 
+	}
+
+	private void buildExpectations() throws DataException {
 		context.checking(new Expectations() {
 			{
 
 				// mocking needed methods
-				allowing(mockedReader).readDataFromDisk("ZERO");
-				will(returnValue(getMockDataContent(0)));
-
-				allowing(mockedReader).readDataFromDisk("TEN");
-				will(returnValue(getMockDataContent(10)));
-
-				allowing(mockedReader).readDataFromDisk("FIFTEEN");
-				will(returnValue(getMockDataContent(15)));
-
-				allowing(mockedReader).readDataFromDisk("TWENTY");
-				will(returnValue(getMockDataContent(20)));
+				allowing(mockedReader).readData();
+				will(returnValue(getMockDataContent(numberOfWorkUnits)));
 
 			}
 
 		});
-
 	}
 
 	@Test
 	public void test1() {
-		workEntity = constructWorkEntity(WorkUnits.FIFTEEN, 10);
+		workEntity = constructWorkEntity(15, 10);
 
 		int piecesOfSizeTwo = 5;
 		int piecesOfSizeOne = 5;
@@ -86,7 +85,7 @@ public class WorkEntityTests {
 
 	@Test
 	public void test2() {
-		workEntity = constructWorkEntity(WorkUnits.TEN, 10);
+		workEntity = constructWorkEntity(10, 10);
 
 		int piecesOfSizeOne = 10;
 
@@ -97,7 +96,7 @@ public class WorkEntityTests {
 
 	@Test
 	public void test3() {
-		workEntity = constructWorkEntity(WorkUnits.TWENTY, 2);
+		workEntity = constructWorkEntity(20, 2);
 
 		int piecesOfSizeTen = 2;
 
@@ -108,7 +107,7 @@ public class WorkEntityTests {
 
 	@Test
 	public void test4() {
-		workEntity = constructWorkEntity(WorkUnits.TWENTY, 3);
+		workEntity = constructWorkEntity(20, 3);
 
 		assertEquals(7, workEntity.getPieceOfWork().size());
 		assertEquals(7, workEntity.getPieceOfWork().size());
@@ -117,10 +116,9 @@ public class WorkEntityTests {
 
 	@Test
 	public void test5() {
-		workEntity = constructWorkEntity(WorkUnits.ZERO, 3);
+		workEntity = constructWorkEntity(0, 3);
 		assertFalse(workEntity.thereIsWork());
 		assertEquals(0, workEntity.workLeft());
 
 	}
 }
-*/

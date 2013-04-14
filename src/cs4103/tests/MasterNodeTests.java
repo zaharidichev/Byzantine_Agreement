@@ -2,8 +2,6 @@ package cs4103.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.LinkedList;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,8 +23,7 @@ public class MasterNodeTests {
 	public void init() {
 		mockComputeNodeFactory = new ComputeNodeFactoryMock();
 		IWorkEntity work = new WorkEntityMock();
-		masterNode = new MasterNode(numComputeNodes, mockComputeNodeFactory,
-				work);
+		masterNode = new MasterNode(mockComputeNodeFactory, work);
 	}
 
 	@Test

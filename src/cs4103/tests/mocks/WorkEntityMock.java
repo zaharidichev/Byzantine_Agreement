@@ -32,4 +32,9 @@ public class WorkEntityMock implements IWorkEntity {
 		return (this.workLeft == 0) ? false : true;
 	}
 
+	@Override
+	public int getNumNodes() {
+		return 10;
+	}
+
 }

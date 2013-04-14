@@ -42,4 +42,11 @@ public interface IWorkEntity {
 	 */
 	public boolean thereIsWork();
 
+	/**
+	 * Retrieve the number of nodes that the work needs to be distributed amongF
+	 * 
+	 * @return
+	 */
+	public int getNumNodes();
+
 }

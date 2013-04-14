@@ -103,4 +103,9 @@ public class WorkEntity implements IWorkEntity {
 		return (!this.data.isEmpty()) ? true : false;
 	}
 
+	@Override
+	public int getNumNodes() {
+		return this.numWorkers;
+	}
+
 }

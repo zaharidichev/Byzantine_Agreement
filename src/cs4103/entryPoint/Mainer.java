@@ -1,5 +1,4 @@
 package cs4103.entryPoint;
-import java.util.LinkedList;
 
 import cs4103.submission.JobSubmission;
 
