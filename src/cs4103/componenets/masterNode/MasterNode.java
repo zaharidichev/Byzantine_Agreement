@@ -22,9 +22,11 @@ public class MasterNode implements IMasterNode {
 
 	private int numOfFinished;
 
-	public MasterNode(int numNodes, String dataFile,
-			IComputeNodeFactory compFactory) {
-		this.allTheWork = new WorkEntity(dataFile, numNodes, new Reader());
+	public MasterNode(int numNodes,
+			IComputeNodeFactory compFactory, IWorkEntity work) {
+		
+		
+		this.allTheWork = work;
 		this.listOfNodes = new HashSet<IComputeNode>();
 		this.partialResults = new LinkedList<IPartialResult>();
 		this.slaveFactory = compFactory;

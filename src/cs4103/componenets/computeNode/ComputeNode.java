@@ -9,8 +9,10 @@ public class ComputeNode extends Thread implements IComputeNode {
 	private LinkedList<Integer> data;
 	private ComputeNodeID id;
 	private IMasterNode parentNode;
+	private PartialResult partialRes;
 
-	public ComputeNode(LinkedList<Integer> data, int numberID, IMasterNode parent) {
+	public ComputeNode(LinkedList<Integer> data, int numberID,
+			IMasterNode parent) {
 		super();
 		this.parentNode = parent;
 		this.data = data;
@@ -23,7 +25,8 @@ public class ComputeNode extends Thread implements IComputeNode {
 			result += item;
 		}
 
-		this.sendResultToMasterNode(new PartialResult(result, this.id));
+		this.partialRes = new PartialResult(result, this.id);
+		this.sendResultToMasterNode(this.partialRes);
 	}
 
 	public void run() {
@@ -53,6 +56,11 @@ public class ComputeNode extends Thread implements IComputeNode {
 	public boolean sendResultToMasterNode(IPartialResult result) {
 		this.parentNode.submitResult(result);
 		return true;
+	}
+
+	@Override
+	public IPartialResult getResult() {
+		return this.partialRes;
 	}
 
 }
