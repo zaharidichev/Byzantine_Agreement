@@ -1,0 +1,7 @@
+
+syntax: regexp
+^src/data\.csv$
+syntax: regexp
+\.jar$
+syntax: regexp
+^SomeFileThatExists\.xxx$
