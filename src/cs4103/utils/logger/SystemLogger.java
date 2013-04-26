@@ -1,6 +1,5 @@
 package cs4103.utils.logger;
 
-import java.util.HashMap;
 import java.util.Observable;
 
 import cs4103.componenets.types.Loggable;
@@ -18,20 +17,24 @@ public class SystemLogger extends Observable {
 
 	private static SystemLogger instance = null;
 	private StringBuilder all; // stream for all messages
-	private HashMap<Log, StringBuilder> mapping;
-	private Log loggerOutput = Log.ALL;
+	private boolean consoleLoging;
 
 	/*
 	 * private constructor for initialization
 	 */
 	private SystemLogger() {
 		this.all = new StringBuilder();
+		consoleLoging = true;
 
-		this.mapping = new HashMap<Log, StringBuilder>();
-		this.mapping.put(Log.PROBLEM, new StringBuilder());
-		this.mapping.put(Log.NETWORK, new StringBuilder());
-		this.mapping.put(Log.GROUP_STATE, new StringBuilder());
+	}
 
+	/**
+	 * Sets the logger for logging to system.out
+	 * 
+	 * @param toggle
+	 */
+	public void setCOnsoleLogging(boolean toggle) {
+		this.consoleLoging = toggle;
 	}
 
 	/**
@@ -56,6 +59,8 @@ public class SystemLogger extends Observable {
 	public void log(Loggable object, Log l) {
 		String message = "{" + Utils.getTimeStamp() + "}    " + object.getLog()
 				+ "\n";
+		System.out.print(message);
+
 		all.append(message);
 
 		//Notify observers that the state has changed
@@ -72,8 +77,11 @@ public class SystemLogger extends Observable {
 	 */
 	public void log(String text, Log l) {
 		String message = "{" + Utils.getTimeStamp() + "}    " + text + "\n";
+		if (this.consoleLoging) {
+			System.out.print(message);
+		}
+
 		all.append(message);
-		this.mapping.get(l).append(message);
 
 		setChanged();
 		notifyObservers();
@@ -82,21 +90,17 @@ public class SystemLogger extends Observable {
 
 	public void logToAll(String message) {
 		this.all.append(message + "\n");
-		for (StringBuilder stream : this.mapping.values()) {
-			stream.append(message + "\n");
-		}
+
 	}
 
-	public void setLoggerOutput(Log l) {
-		this.loggerOutput = l;
-	}
-
+	/**
+	 * Retrieves all the logging information up to this point
+	 * 
+	 * @return
+	 */
 	public String getLog() {
 
-		if (this.loggerOutput == Log.ALL) {
-			return this.all.toString() + "\n";
-		}
-		return (this.mapping.get(this.loggerOutput).toString() + "\n");
+		return this.all.toString() + "\n";
 
 	}
 }

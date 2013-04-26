@@ -14,15 +14,26 @@ import cs4103.utils.logger.Log;
 import cs4103.utils.logger.SystemLogger;
 import cs4103.utils.misc.ProbabilityGenerator;
 
+/**
+ * A simple model that is used by the {@link SimulationGUI} class in order to
+ * configure and start an instance of a {@link MasterNode} object.
+ * 
+ * @author 120010516
+ * 
+ */
 public class SimulationModel extends Observable {
 
+	// all the variables needed
 	private int networkFailProb;
 	private int nodeFailProb;
 	private String dataFile;
 	private int numNodes;
 	private int numDuplicates;
-	private MasterNode m;
+	private MasterNode m; // isntance of the master
 
+	/**
+	 * Default constructor, creates an empty model
+	 */
 	public SimulationModel() {
 
 		this.networkFailProb = 0;
@@ -32,6 +43,9 @@ public class SimulationModel extends Observable {
 		this.numDuplicates = 0;
 	}
 
+	/*
+	 * Setters for all the needed varaibles
+	 */
 	public void setDataFile(String s) {
 		this.dataFile = s;
 	}
@@ -52,6 +66,11 @@ public class SimulationModel extends Observable {
 		this.numDuplicates = d;
 	}
 
+	/**
+	 * Checks if the computation is done
+	 * 
+	 * @return
+	 */
 	public boolean done() {
 
 		if (m != null) {
@@ -66,13 +85,27 @@ public class SimulationModel extends Observable {
 		return false;
 	}
 
+	/**
+	 * Retrieves the result
+	 * 
+	 * @return
+	 * @throws MasterNodeException
+	 *             in case master is not ready
+	 */
 	public int getResult() throws MasterNodeException {
 		return this.m.getResult();
 	}
 
+	/**
+	 * Creates a new {@link MasterNode} in a separate thread so the GUI does not
+	 * block
+	 * 
+	 * @throws DataException
+	 */
 	public void startSimulation() throws DataException {
 		final SystemLogger logger = SystemLogger.getInstance();
 		final IReader reader = new Reader(this.dataFile);
+		// sets the probability engine with the correct values
 		ProbabilityGenerator.setProbabilityOfComissionError(this.nodeFailProb);
 		ProbabilityGenerator.setProbabilityOfNetworkError(this.networkFailProb);
 
@@ -93,6 +126,7 @@ public class SimulationModel extends Observable {
 
 					int result = m.getResult();
 					logger.logToAll("Result is : " + result);
+					// logg any exceptions that have occured
 				} catch (DataException e) {
 					logger.log(e.getMessage(), Log.PROBLEM);
 				} catch (MasterNodeException e) {
@@ -103,7 +137,7 @@ public class SimulationModel extends Observable {
 
 			}
 		});
-		runner.start();
+		runner.start(); // start the master
 
 	}
 }

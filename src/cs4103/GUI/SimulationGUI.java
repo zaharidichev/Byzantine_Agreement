@@ -17,27 +17,24 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
+import cs4103.exceptions.DataException;
 import cs4103.utils.logger.SystemLogger;
 
 /**
- * This is the GUI for the {@link Server } class. The GUi allows for port,
- * logging file and root directory to specified. Another feature is that there
- * is a textfield that logs all the activities of the server. This is done by
- * using model and delegate. In this case the server is the model and this
- * interface is the delegate. There is no need to pass the model to the delegate
- * on construction. The delegate can internally get an instance of
- * {@link Server} object since the server is employing a Singleton pattern
+ * This is a simple gui which allows for entering parameters such as probability
+ * of node failure and network failure, number of nodes, etc. It also displays
+ * the logged messages by the system
  * 
  * @author 120010516
  * 
  */
-public class ServerGUI implements Observer {
+public class SimulationGUI implements Observer {
 	private static final int WIDTH = 940;
 	private static final int HEIGHT = 400;
 	private static final int TEXT_H = 11;
 	private static final int TEXT_W = 11;
-	private static final String NUM_NODES = "2";
-	private static final String NUM_REPLICAS = "11";
+	private static final String NUM_NODES = "10";
+	private static final String NUM_REPLICAS = "1";
 	private static final String INPUT_FILE = "find a file";
 	private static final String NET_FAILURE = "0";
 	private static final String NODE_FAILURE = "0";
@@ -45,39 +42,36 @@ public class ServerGUI implements Observer {
 	private JFrame mainFrame; // the main frame
 	private JToolBar tools; // the toolbar
 
-	private JTextField inputFileField;
-	private JTextField numberOfNodes;
-	private JTextField numberOfReplicas;
-	private JTextField nodeFailProb;
-	private JTextField netFailProb;
-	private JTextField logFileNameField; // the field that shows the selected log file
+	private JTextField inputFileField; // the field displaying the input file
+	private JTextField numberOfNodes; // number of nodes
+	private JTextField numberOfReplicas; // number of replicas
+	private JTextField nodeFailProb; // probability of node failure field
+	private JTextField netFailProb; // probability of network failure field
 
-	private JButton startSimulation; // button to triger the client handling functionality of the server
-	private JButton browseForData; // a button to invoke a file choosing dialog in order to specify server root folder
+	private JButton startSimulation; // starts the simulation
+	private JButton browseForData; // opens a browsing tab to locate the data input
 
 	private JScrollPane outputArea; // the scroll pane for the console displaying all the logged activity
-	private JTextArea console; //console to which the content of the server logger is being printed
+	private JTextArea console; //console to which the content of the simulation logger is being printed
 
-	private SimulationModel model;
-	private SystemLogger logger;
+	private SimulationModel model; // the model that starts the simulation
+	private SystemLogger logger; // an instance of the system logger
 
 	//private Server server; //reference to the server
 
 	/**
-	 * Default constructor that retrieves an instance of the server and
-	 * intialises all the needed components of the UI, along with action
-	 * listeners for the buttons
+	 * Default constructor that retrieves an instance of the
+	 * {@link SimulationModel} and intialises all the needed components of the
+	 * UI, along with action listeners for the buttons
 	 */
-	public ServerGUI(SimulationModel model) {
-
-		//this.server = Server.getInstance(); // retrieves instance of a the server
+	public SimulationGUI(SimulationModel model) {
 
 		this.model = model;
 		this.logger = SystemLogger.getInstance();
 
 		this.mainFrame = new JFrame();
 
-		tools = new JToolBar(); // creating  toolbar for all the server functionality
+		tools = new JToolBar(); // creating  toolbar with all the needed tools and buttons
 
 		console = new JTextArea(TEXT_W, TEXT_H); //sets the text dimensions
 		console.setEditable(false);
@@ -86,12 +80,11 @@ public class ServerGUI implements Observer {
 		createToolBar();
 
 		mainFrame.add(outputArea, BorderLayout.CENTER);
-
 		mainFrame.setVisible(true);
 		mainFrame.setSize(WIDTH, HEIGHT);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		//setting defaults
+		//setting defaults balues for fields
 
 		this.inputFileField.setText(INPUT_FILE);
 		this.numberOfReplicas.setText(NUM_REPLICAS);
@@ -99,11 +92,13 @@ public class ServerGUI implements Observer {
 		this.nodeFailProb.setText(NODE_FAILURE);
 		this.netFailProb.setText(NET_FAILURE);
 
-		this.model.addObserver(this);
 		this.logger.addObserver(this);
 
 	}
 
+	/*
+	 * Convinience function for creating a warning window
+	 */
 	private void createInfoWindow(String message) {
 
 		Object[] options = { "OK", };
@@ -119,10 +114,8 @@ public class ServerGUI implements Observer {
 	private void createToolBar() {
 		// creating text fields
 		inputFileField = new JTextField(50);
-		logFileNameField = new JTextField(50);
 
 		//those fields are just for displaying the path
-		logFileNameField.setEditable(false);
 		inputFileField.setEditable(false);
 
 		// those are editable
@@ -143,9 +136,9 @@ public class ServerGUI implements Observer {
 
 		startSimulation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//button to invoke the startHandlingClients() function on the server
+				//button to invoke the start  function on the model
 				try {
-					// parsing all the necessary fields that will be supplied as parametars to the server
+					// parsing all the necessary fields that will be supplied as parametars to the simulation
 					int numNodes = Integer.parseInt(numberOfNodes.getText());
 					int numReplicas = Integer.parseInt(numberOfReplicas
 							.getText());
@@ -154,6 +147,7 @@ public class ServerGUI implements Observer {
 
 					String dataFile = inputFileField.getText();
 
+					// setting all variables of the model
 					model.setDataFile(dataFile);
 					model.setNetworkFailProb(networkFailure);
 					model.setNodeFailProb(nodeFailure);
@@ -161,8 +155,9 @@ public class ServerGUI implements Observer {
 					model.setNumNodes(numNodes);
 
 					model.startSimulation();
-				} catch (Exception e1) {
 
+				} catch (DataException e1) {
+					// if an exception is thrown create a window and display message .
 					createInfoWindow("Invlaid file");
 				}
 			}
@@ -170,20 +165,19 @@ public class ServerGUI implements Observer {
 
 		browseForData.addActionListener(new ActionListener() {
 			/*
-			 * action listener to show a file browse dialog and select a folder
-			 * to serve as the root directory for the server
+			 * action listener to show a file browse dialog and select a file to
+			 * serve as the input file
 			 */
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				JFileChooser chooser = new JFileChooser();
-				//ensure that it is only directories that can be selected
+				JFileChooser chooser = new JFileChooser(); //ensure that only files can be selected
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				int dialogStatus = chooser.showOpenDialog(new JFrame()); //show an open dialog
 
 				if (dialogStatus == JFileChooser.APPROVE_OPTION) {
 					String fileName = chooser.getSelectedFile().getPath();
-					// update the field holding the path to the directory
+					// update the field holding the path to the file
 					inputFileField.setText(fileName);
 				}
 
@@ -214,10 +208,10 @@ public class ServerGUI implements Observer {
 
 	/**
 	 * Method to update the state of the GUI. This method is used mainly by the
-	 * logger in Server. When the log function is called from a client thread or
-	 * from the main server thread, the message that it logs is appended to the
-	 * logging buffer. In the end notifyObservers() is called and the UI is
-	 * updated with the newly available logging information
+	 * {@link SystemLogger}. When the log function is called, the message that
+	 * it logs is appended to the logging buffer. In the end notifyObservers()
+	 * is called and the UI is updated with the newly available logging
+	 * information
 	 * 
 	 * @param o
 	 * @param arg
@@ -226,14 +220,11 @@ public class ServerGUI implements Observer {
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				console.setText(""); // clear the console
 				console.setText(logger.getLog()); // print the content of the logger to the console
 
 			}
 		});
-	}
-
-	public static void main(String[] args) {
-		new ServerGUI(new SimulationModel());
 	}
 
 }
