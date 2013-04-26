@@ -12,7 +12,6 @@ public class StartGUIMode {
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		System.out.println("JAVAAA");
 		new SimulationGUI(new SimulationModel());
 		Thread.sleep(5000);
 	}
