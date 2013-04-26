@@ -14,8 +14,8 @@ public class StartConsoleMode {
 
 		IJobSubmission dashboard = new JobSubmission();
 		dashboard.setNumberOfNodes(10, 7);
-		dashboard.setNetworkFailureProbability(1);
-		dashboard.setNodeFailureProbability(2);
+		dashboard.setNetworkFailureProbability(0);
+		dashboard.setNodeFailureProbability(1);
 		int result = dashboard.submitJob("/cs/home/zd2/Desktop/data.csv");
 		System.out.println("Result from dashboard: " + result);
 	}
