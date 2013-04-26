@@ -2,20 +2,36 @@ package cs4103.submission;
 
 import cs4103.componenets.computeNode.factories.ComputeNodeFactory;
 import cs4103.componenets.masterNode.MasterNode;
+import cs4103.componenets.masterNode.nodeGroup.NodeGroup;
 import cs4103.componenets.network.NodeID;
 import cs4103.componenets.types.NodeType;
 import cs4103.exceptions.DataException;
 import cs4103.exceptions.MasterNodeException;
 import cs4103.utils.io.Reader;
+import cs4103.utils.logger.Log;
+import cs4103.utils.logger.SystemLogger;
 import cs4103.utils.misc.ProbabilityGenerator;
+
+/**
+ * Implementation of the IJobSubmission interface (as required in the
+ * assignment). This class takes care of creating a {@link MasterNode} ,
+ * starting it, keeping track of progress and delviering back the results
+ * 
+ * @author 120010516
+ * 
+ */
 
 public class JobSubmission implements IJobSubmission {
 
+	// variables needed 
 	int numberOfNodes;
 	int numberOfReplications;
 	int nodeFaulureProbability;
 	int networkFailureProbability;
 
+	/**
+	 * Constructs a default job submission
+	 */
 	public JobSubmission() {
 		this.numberOfNodes = 0;
 		this.numberOfReplications = 1;
@@ -25,49 +41,63 @@ public class JobSubmission implements IJobSubmission {
 
 	@Override
 	public void setNumberOfNodes(int number_of_nodes) {
+		// set the number of nodes
 		this.numberOfNodes = number_of_nodes;
 	}
 
 	@Override
 	public void setNumberOfNodes(int number_of_nodes, int replication) {
+		//set the number of replication
 		this.numberOfNodes = number_of_nodes;
-		this.numberOfReplications = replication;
+		this.numberOfReplications = replication + 1;
 	}
 
 	@Override
 	public int submitJob(String filename) {
+		int result = -1;
+		// set probabilities
 		ProbabilityGenerator
 				.setProbabilityOfComissionError(this.nodeFaulureProbability);
 		ProbabilityGenerator
 				.setProbabilityOfNetworkError(this.networkFailureProbability);
+
+		// create a new reader object
 		Reader reader = new Reader(filename);
 		MasterNode master = null;
+		//get an intance of the logger
+		SystemLogger logger = SystemLogger.getInstance();
+
 		try {
-			System.out.println(numberOfNodes);
+			//creates the master
 			master = new MasterNode(new ComputeNodeFactory(), reader,
 					new NodeID(NodeType.MASTER, 1), this.numberOfNodes,
 					this.numberOfReplications);
-			master.start();
-
+			master.start(); // starts the master
 			while (!master.checkIfDone()) {
+				// blocks untill the master is done
 				Thread.sleep(500);
 			}
-			return master.getResult();
-		} catch (DataException e) {
-			System.err.println(e.getMessage());
-		} catch (MasterNodeException e) {
-			System.err.println(e.getMessage());
-		} catch (InterruptedException e) {
-			System.err.println(e.getMessage());
-
-		}
-
-		int result = -1;
-		try {
 			result = master.getResult();
+			// handles any exceptions that might arise
+		} catch (DataException e) {
+			System.out.println(e.getMessage());
 		} catch (MasterNodeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+		} catch (InterruptedException e) {
+			System.out.println(e.getMessage());
+
+		} finally {
+
+			/*
+			 * at the end no matter what happens, it is useful to take a look at
+			 * the states of the individual groups, so we can observe what
+			 * results have been received
+			 */
+			System.out
+					.println("----------------------------------STATE OF NODE GROUPS----------------------------------");
+			for (NodeGroup g : master.getGroups()) {
+				logger.log(g, Log.NETWORK);
+			}
 		}
 
 		return result;

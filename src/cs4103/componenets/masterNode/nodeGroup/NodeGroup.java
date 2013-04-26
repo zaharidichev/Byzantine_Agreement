@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 
 import cs4103.componenets.network.NodeID;
+import cs4103.componenets.types.Loggable;
 
 /**
  * An instance of this class is used to store the results of the computations of
@@ -15,7 +16,7 @@ import cs4103.componenets.network.NodeID;
  * @author 120010516
  * 
  */
-public class NodeGroup {
+public class NodeGroup implements Loggable {
 
 	private HashSet<NodeID> members; // the set of separate nodes
 	/*
@@ -175,5 +176,10 @@ public class NodeGroup {
 
 	public HashSet<NodeID> getNodeAddresses() {
 		return this.members;
+	}
+
+	@Override
+	public String getLog() {
+		return this.toString();
 	}
 }

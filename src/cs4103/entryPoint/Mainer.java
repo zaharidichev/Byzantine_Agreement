@@ -19,7 +19,7 @@ public class Mainer {
 		IJobSubmission dashboard = new JobSubmission();
 		dashboard.setNumberOfNodes(10, 5);
 		dashboard.setNetworkFailureProbability(10);
-		dashboard.setNodeFailureProbability(0);
+		dashboard.setNodeFailureProbability(40);
 		int result = dashboard
 				.submitJob("/home/zahari/Desktop/newWorkspace/CS4103-CW2-120010516/src/data.csv");
 

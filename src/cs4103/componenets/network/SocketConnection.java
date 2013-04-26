@@ -137,7 +137,6 @@ public class SocketConnection {
 						Message toSend = outstanding.peek();
 						toSend.setSeq(seq); // rewrite the seq to the current one
 
-						logger.log(toSend, Log.NETWORK); // log the message
 						network.sendMessage(toSend); // send the message, using the network
 
 						/*
@@ -195,6 +194,7 @@ public class SocketConnection {
 				}
 			}
 		});
+		this.sender.setDaemon(true);
 		this.sender.start();
 
 	}

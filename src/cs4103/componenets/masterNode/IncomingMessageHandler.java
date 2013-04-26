@@ -124,7 +124,7 @@ public class IncomingMessageHandler {
 
 			}
 		});
-
+		handler.setDaemon(true);
 		handler.start(); // start the thread
 	}
 }

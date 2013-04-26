@@ -1,5 +1,7 @@
 package cs4103.utils.logger;
 
+import java.util.Observable;
+
 import cs4103.componenets.types.Loggable;
 import cs4103.utils.misc.Utils;
 
@@ -11,7 +13,9 @@ import cs4103.utils.misc.Utils;
  * @author 120010516
  * 
  */
-public class SystemLogger {
+public class SystemLogger extends Observable {
+
+	private boolean completionReported;
 
 	private static SystemLogger instance = null;
 	private StringBuilder all; // stream for all messages
@@ -25,6 +29,8 @@ public class SystemLogger {
 		this.all = new StringBuilder();
 		this.networkActivity = new StringBuilder();
 		this.problems = new StringBuilder();
+
+		this.completionReported = false;
 
 	}
 
@@ -48,7 +54,8 @@ public class SystemLogger {
 	 * @param l
 	 */
 	public void log(Loggable object, Log l) {
-		String message = "{" + Utils.getTimeStamp() + "}    " + object.getLog();
+		String message = "{" + Utils.getTimeStamp() + "}    " + object.getLog()
+				+ "\n";
 		all.append(message);
 
 		if (l == Log.NETWORK) {
@@ -56,7 +63,10 @@ public class SystemLogger {
 		} else {
 			problems.append(message);
 		}
-		System.out.println(message);
+		System.out.print(message);
+		//Notify observers that the state has changed
+		setChanged();
+		notifyObservers();
 
 	}
 
@@ -67,7 +77,7 @@ public class SystemLogger {
 	 * @param l
 	 */
 	public void log(String text, Log l) {
-		String message = "{" + Utils.getTimeStamp() + "}    " + text;
+		String message = "{" + Utils.getTimeStamp() + "}    " + text + "\n";
 		all.append(message);
 
 		if (l == Log.NETWORK) {
@@ -75,8 +85,15 @@ public class SystemLogger {
 		} else {
 			problems.append(message);
 		}
-		System.out.println(message);
+		System.out.print(message);
+		//Notify observers that the state has changed
+		setChanged();
+		notifyObservers();
 
+	}
+
+	public String getLog() {
+		return (this.all.toString() + "\n");
 	}
 
 }
