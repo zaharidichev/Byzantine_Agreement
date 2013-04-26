@@ -71,14 +71,39 @@ public class SimulationModel extends Observable {
 	}
 
 	public void startSimulation() throws DataException {
-		IReader reader = new Reader(this.dataFile);
+		final SystemLogger logger = SystemLogger.getInstance();
+		final IReader reader = new Reader(this.dataFile);
 		ProbabilityGenerator.setProbabilityOfComissionError(this.nodeFailProb);
 		ProbabilityGenerator.setProbabilityOfNetworkError(this.networkFailProb);
 
-		m = new MasterNode(new ComputeNodeFactory(), reader, new NodeID(
-				NodeType.MASTER, 1), this.numNodes, this.numDuplicates);
+		Thread runner = new Thread(new Runnable() {
 
-		m.start();
+			@Override
+			public void run() {
+				try {
+					m = new MasterNode(new ComputeNodeFactory(), reader,
+							new NodeID(NodeType.MASTER, 1), numNodes,
+							numDuplicates);
+					m.start();
+
+					while (!m.checkIfDone()) {
+						// blocks untill the master is done
+						Thread.sleep(500);
+					}
+
+					int result = m.getResult();
+					logger.logToAll("Result is : " + result);
+				} catch (DataException e) {
+					logger.log(e.getMessage(), Log.PROBLEM);
+				} catch (MasterNodeException e) {
+					logger.log(e.getMessage(), Log.PROBLEM);
+
+				} catch (InterruptedException e) {
+				}
+
+			}
+		});
+		runner.start();
 
 	}
 }

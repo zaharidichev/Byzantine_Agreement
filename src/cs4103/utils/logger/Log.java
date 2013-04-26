@@ -7,5 +7,5 @@ package cs4103.utils.logger;
  * 
  */
 public enum Log {
-	NETWORK, PROBLEM
+	NETWORK, PROBLEM, GROUP_STATE, ALL
 }

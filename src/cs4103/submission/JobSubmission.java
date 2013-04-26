@@ -2,7 +2,6 @@ package cs4103.submission;
 
 import cs4103.componenets.computeNode.factories.ComputeNodeFactory;
 import cs4103.componenets.masterNode.MasterNode;
-import cs4103.componenets.masterNode.nodeGroup.NodeGroup;
 import cs4103.componenets.network.NodeID;
 import cs4103.componenets.types.NodeType;
 import cs4103.exceptions.DataException;
@@ -79,25 +78,16 @@ public class JobSubmission implements IJobSubmission {
 			}
 			result = master.getResult();
 			// handles any exceptions that might arise
-		} catch (DataException e) {
-			System.out.println(e.getMessage());
-		} catch (MasterNodeException e) {
-			System.out.println(e.getMessage());
-		} catch (InterruptedException e) {
-			System.out.println(e.getMessage());
+		} catch (DataException e1) {
+			logger.log(e1.getMessage(), Log.PROBLEM);
+		} catch (MasterNodeException e2) {
+			logger.log(e2.getMessage(), Log.PROBLEM);
+		} catch (InterruptedException e3) {
+			logger.log(e3.getMessage(), Log.PROBLEM);
 
 		} finally {
 
-			/*
-			 * at the end no matter what happens, it is useful to take a look at
-			 * the states of the individual groups, so we can observe what
-			 * results have been received
-			 */
-			System.out
-					.println("----------------------------------STATE OF NODE GROUPS----------------------------------");
-			for (NodeGroup g : master.getGroups()) {
-				logger.log(g, Log.NETWORK);
-			}
+			System.out.println(logger.getLog());
 		}
 
 		return result;

@@ -127,9 +127,9 @@ public class SocketConnection {
 
 						if (outstanding.peek() == null) {
 							// if the outstanding messages queue is empty, continue to the next iteration
+
 							continue;
 						}
-
 						/*
 						 * if not, get the message but to not remove it from the
 						 * queue, as it might need to be retransmitted

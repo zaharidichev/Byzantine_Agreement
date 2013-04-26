@@ -138,15 +138,9 @@ public class NodeGroup implements Loggable {
 			}
 		}
 
-		/*
-		 * if (this.totalReceived == this.members.size()) {
-		 * 
-		 * Again checking the last condition.If the result histogram size is the
-		 * same number as the total received result, it means that each result
-		 * differs from
-		 * 
-		 * return GroupState.FAILED; }
-		 */
+		if (this.totalReceived == this.sizeOfGroup) {
+			return GroupState.FAILED;
+		}
 
 		return GroupState.UNDECIDED;
 

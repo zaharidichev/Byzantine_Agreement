@@ -54,9 +54,11 @@ public class Message implements Loggable {
 	 * @param other
 	 */
 	public Message(Message other) {
-		this.source = other.getSrc();
-		this.destination = other.getDest();
-		this.payload = other.getPayload();
+		this.source = new NodeID(other.getSrc().getType(), other.getSrc()
+				.getNumPart());
+		this.destination = new NodeID(other.getDest().getType(), other
+				.getDest().getNumPart());
+		this.payload = new LinkedList<Integer>(other.getPayload());
 		this.type = other.getType();
 		this.seqNum = other.seqNum;
 	}
@@ -139,6 +141,7 @@ public class Message implements Loggable {
 
 	@Override
 	public String toString() {
+
 		return "{[source: " + source + "] [destination: " + destination
 				+ "] [payload: " + payload + "] [type: " + type + "] [ SN: "
 				+ this.seqNum + "]}";

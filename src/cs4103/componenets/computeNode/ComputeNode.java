@@ -132,7 +132,7 @@ public class ComputeNode extends Thread implements IComputeNode {
 			 * problems, so just ACK it again
 			 */
 			this.network.sendMessage(new Message(getLocalAddress(), parentNode,
-					m.getPayload(), MessageType.ACK, expecting));
+					new LinkedList<Integer>(), MessageType.ACK, expecting));
 			return true;
 		}
 
@@ -168,7 +168,7 @@ public class ComputeNode extends Thread implements IComputeNode {
 						// check if it has not been received before, send an ACK for it... 
 
 						this.network.sendMessage(new Message(getLocalAddress(),
-								parentNode, received.getPayload(),
+								parentNode, new LinkedList<Integer>(),
 								MessageType.ACK, expectingSeq));
 						// get its sum 
 						int sumOfMessage = this.sum(received);
@@ -191,13 +191,6 @@ public class ComputeNode extends Thread implements IComputeNode {
 
 					Message result = new Message(this.address, this.parentNode,
 							payload, MessageType.RESULT, received.getSeqNum());
-
-					//Thread.sleep((long) (10000 * Math.random()));
-					/*
-					 * this.network.sendMessage(new Message(getLocalAddress(),
-					 * parentNode.getLocalAddress(), received.getPayload(),
-					 * MessageType.ACK, received .getSeqNum()));
-					 */
 
 					/*
 					 * Send the result message. Keep in mind that we do not need

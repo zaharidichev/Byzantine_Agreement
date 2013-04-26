@@ -136,23 +136,28 @@ public class NodeGroupManager {
 	 *             recover)
 	 */
 	public boolean areAllGroupsDecided() throws MasterNodeException {
-
+		Boolean returnValue = true;
+		logger.log(
+				"----------------------------------STATE OF NODE GROUPS----------------------------------",
+				Log.GROUP_STATE);
 		for (NodeGroup group : this.groupsOfNodes) {
+			logger.log(group, Log.GROUP_STATE);
 			if (group.getGroupState() == GroupState.UNDECIDED) {
 
-				return false;
+				returnValue = false;
 			} else if (group.getGroupState() == GroupState.FAILED) {
 				/*
 				 * we need to give up at this point since too many nodes have
 				 * given different results, or too many nodes are unreachable
 				 * and therefore excluded from the group
 				 */
+				this.closeAllSockets();
 				throw new MasterNodeException("Decision cannot be reached..."
 						+ group);
 			}
 		}
 
-		return true;
+		return returnValue;
 
 	}
 
@@ -214,7 +219,8 @@ public class NodeGroupManager {
 				}
 				//create a new work message
 				Message workMessage = new Message(
-						this.master.getLocalAddress(), null,
+						this.master.getLocalAddress(),
+						this.master.getLocalAddress(), // this will be rewritten later
 						this.work.getPieceOfWork(), MessageType.WORK, 0);
 
 				// send the message to the whole group
@@ -233,7 +239,8 @@ public class NodeGroupManager {
 	 */
 	public void dispatchWorkCollectionMessages() {
 		for (NodeGroup group : this.groupsOfNodes) {
-			Message poll = new Message(this.master.getLocalAddress(), null,
+			Message poll = new Message(this.master.getLocalAddress(),
+					this.master.getLocalAddress(), // will get rewritten
 					new LinkedList<Integer>(), MessageType.POLL, 0);
 			this.sendMessageToGroup(group, poll);
 		}

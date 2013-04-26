@@ -1,5 +1,6 @@
 package cs4103.utils.logger;
 
+import java.util.HashMap;
 import java.util.Observable;
 
 import cs4103.componenets.types.Loggable;
@@ -15,22 +16,21 @@ import cs4103.utils.misc.Utils;
  */
 public class SystemLogger extends Observable {
 
-	private boolean completionReported;
-
 	private static SystemLogger instance = null;
 	private StringBuilder all; // stream for all messages
-	private StringBuilder networkActivity; // stream for network related messages
-	private StringBuilder problems; // stream for messages indicating problems
+	private HashMap<Log, StringBuilder> mapping;
+	private Log loggerOutput = Log.ALL;
 
 	/*
 	 * private constructor for initialization
 	 */
 	private SystemLogger() {
 		this.all = new StringBuilder();
-		this.networkActivity = new StringBuilder();
-		this.problems = new StringBuilder();
 
-		this.completionReported = false;
+		this.mapping = new HashMap<Log, StringBuilder>();
+		this.mapping.put(Log.PROBLEM, new StringBuilder());
+		this.mapping.put(Log.NETWORK, new StringBuilder());
+		this.mapping.put(Log.GROUP_STATE, new StringBuilder());
 
 	}
 
@@ -58,12 +58,6 @@ public class SystemLogger extends Observable {
 				+ "\n";
 		all.append(message);
 
-		if (l == Log.NETWORK) {
-			networkActivity.append(message);
-		} else {
-			problems.append(message);
-		}
-		System.out.print(message);
 		//Notify observers that the state has changed
 		setChanged();
 		notifyObservers();
@@ -79,21 +73,30 @@ public class SystemLogger extends Observable {
 	public void log(String text, Log l) {
 		String message = "{" + Utils.getTimeStamp() + "}    " + text + "\n";
 		all.append(message);
+		this.mapping.get(l).append(message);
 
-		if (l == Log.NETWORK) {
-			networkActivity.append(message);
-		} else {
-			problems.append(message);
-		}
-		System.out.print(message);
-		//Notify observers that the state has changed
 		setChanged();
 		notifyObservers();
 
 	}
 
-	public String getLog() {
-		return (this.all.toString() + "\n");
+	public void logToAll(String message) {
+		this.all.append(message + "\n");
+		for (StringBuilder stream : this.mapping.values()) {
+			stream.append(message + "\n");
+		}
 	}
 
+	public void setLoggerOutput(Log l) {
+		this.loggerOutput = l;
+	}
+
+	public String getLog() {
+
+		if (this.loggerOutput == Log.ALL) {
+			return this.all.toString() + "\n";
+		}
+		return (this.mapping.get(this.loggerOutput).toString() + "\n");
+
+	}
 }

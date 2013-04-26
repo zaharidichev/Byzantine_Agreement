@@ -15,6 +15,7 @@ import cs4103.componenets.types.NodeType;
 public class NodeID {
 	private String idString; // the textual representation
 	private NodeType type; // the type of the node
+	private int numPart;
 
 	/**
 	 * Constructor takes as arguments the numeric part of the id as well as the
@@ -30,7 +31,12 @@ public class NodeID {
 		//builds the id string
 		this.type = type;
 		this.idString = new String(this.type + "-" + numPart);
+		this.numPart = numPart;
 
+	}
+
+	public int getNumPart() {
+		return this.numPart;
 	}
 
 	/**

@@ -17,12 +17,10 @@ public class Mainer {
 			InterruptedException {
 
 		IJobSubmission dashboard = new JobSubmission();
-		dashboard.setNumberOfNodes(10, 5);
-		dashboard.setNetworkFailureProbability(10);
-		dashboard.setNodeFailureProbability(40);
-		int result = dashboard
-				.submitJob("/home/zahari/Desktop/newWorkspace/CS4103-CW2-120010516/src/data.csv");
-
+		dashboard.setNumberOfNodes(10, 7);
+		dashboard.setNetworkFailureProbability(30);
+		dashboard.setNodeFailureProbability(30);
+		int result = dashboard.submitJob("/cs/home/zd2/Desktop/data.csv");
 		System.out.println("Result from dashboard: " + result);
 	}
 }
