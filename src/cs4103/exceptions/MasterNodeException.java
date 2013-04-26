@@ -2,7 +2,7 @@ package cs4103.exceptions;
 
 /**
  * Any problems that are associated with the masterNode need to be reflected by
- * throwing this exception
+ * throwing this exception.
  * 
  * @author 120010516
  * 

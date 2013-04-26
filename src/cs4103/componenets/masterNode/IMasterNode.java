@@ -1,7 +1,7 @@
 package cs4103.componenets.masterNode;
 
 import cs4103.componenets.computeNode.IComputeNode;
-import cs4103.componenets.computeNode.IPartialResult;
+import cs4103.componenets.network.IAddressable;
 import cs4103.exceptions.MasterNodeException;
 
 /**
@@ -14,12 +14,12 @@ import cs4103.exceptions.MasterNodeException;
  * 
  */
 
-public interface IMasterNode {
+public interface IMasterNode extends IAddressable {
 
 	/**
 	 * Start the computing nodes
 	 */
-	public void StartComputeNodes();
+	//	private void StartComputeNodes();
 
 	/**
 	 * This method is used by an {@link IComputeNode} to submit a partial result
@@ -29,15 +29,6 @@ public interface IMasterNode {
 	 *            {@link IPartialResult} containing the result of the
 	 *            computation performed on the {@link IComputeNode}
 	 */
-	public void submitResult(IPartialResult result);
-
-	/**
-	 * Method used to check whether the node is ready (ready means that all
-	 * results from dispatched compute nodes have been gathered and processed)
-	 * 
-	 * @return
-	 */
-	public boolean isReady();
 
 	/**
 	 * 

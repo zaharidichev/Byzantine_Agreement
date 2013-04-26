@@ -1,4 +1,4 @@
-package cs4103.utils;
+package cs4103.utils.misc;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

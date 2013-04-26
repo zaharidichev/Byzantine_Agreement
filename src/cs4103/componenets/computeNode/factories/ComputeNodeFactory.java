@@ -1,10 +1,9 @@
 package cs4103.componenets.computeNode.factories;
 
-import java.util.LinkedList;
-
 import cs4103.componenets.computeNode.ComputeNode;
 import cs4103.componenets.computeNode.IComputeNode;
 import cs4103.componenets.masterNode.IMasterNode;
+import cs4103.componenets.network.NodeID;
 
 /**
  * An implementation of the {@link ComputeNodeFactory} interface. The purpose of
@@ -26,8 +25,8 @@ public class ComputeNodeFactory implements IComputeNodeFactory {
 	}
 
 	@Override
-	public IComputeNode getSumComputeNode(LinkedList<Integer> data, int ID,
-			IMasterNode parent) {
-		return new ComputeNode(data, ID, parent); // returns the newly created node
+	public IComputeNode getSumComputeNode(int id, NodeID master) {
+
+		return new ComputeNode(id, master);
 	}
 }

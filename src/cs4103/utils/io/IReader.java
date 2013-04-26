@@ -1,4 +1,4 @@
-package cs4103.utils;
+package cs4103.utils.io;
 
 import java.util.LinkedList;
 

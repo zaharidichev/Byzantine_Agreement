@@ -1,6 +1,8 @@
-package cs4103.componenets.computeNode;
+package cs4103.componenets.network;
 
+import cs4103.componenets.computeNode.IComputeNode;
 import cs4103.componenets.masterNode.IMasterNode;
+import cs4103.componenets.types.NodeType;
 
 /**
  * This class represents a unique ID of a {@link IComputeNode} object. Each
@@ -10,18 +12,34 @@ import cs4103.componenets.masterNode.IMasterNode;
  * @author 120010516
  * 
  */
-public class ComputeNodeID {
-	private String idString;
+public class NodeID {
+	private String idString; // the textual representation
+	private NodeType type; // the type of the node
 
 	/**
-	 * Constructor takes as an argument the numeric part of the ID
+	 * Constructor takes as arguments the numeric part of the id as well as the
+	 * {@link NodeType} of the node
 	 * 
+	 * @param type
+	 *            the {@link NodeType} enum
 	 * @param numPart
+	 *            the numeric part
 	 */
-	public ComputeNodeID(int numPart) {
+	public NodeID(NodeType type, int numPart) {
 
 		//builds the id string
-		this.idString = new String("ComputeNode-" + numPart);
+		this.type = type;
+		this.idString = new String(this.type + "-" + numPart);
+
+	}
+
+	/**
+	 * Used if the type of the node is needed
+	 * 
+	 * @return a {@link NodeType} value
+	 */
+	public NodeType getType() {
+		return this.type;
 	}
 
 	// All the rest is pretty clear 
@@ -43,7 +61,7 @@ public class ComputeNodeID {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ComputeNodeID other = (ComputeNodeID) obj;
+		NodeID other = (NodeID) obj;
 		if (this.hashCode() != other.hashCode()) {
 			return false;
 		}

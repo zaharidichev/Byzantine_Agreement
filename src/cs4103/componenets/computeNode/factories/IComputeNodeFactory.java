@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import cs4103.componenets.computeNode.IComputeNode;
 import cs4103.componenets.masterNode.IMasterNode;
+import cs4103.componenets.network.NodeID;
 
 /**
  * An interface for a factory class which purpose is to construct objects of
@@ -28,7 +29,6 @@ public interface IComputeNodeFactory {
 	 *            is created
 	 * @return an {@link IComputeNode} object
 	 */
-	public IComputeNode getSumComputeNode(LinkedList<Integer> data, int ID,
-			IMasterNode parent);
+	public IComputeNode getSumComputeNode(int id, NodeID master);
 
 }
