@@ -2,6 +2,8 @@ package cs4103.GUI;
 
 import java.util.Observable;
 
+import javax.swing.JOptionPane;
+
 import cs4103.componenets.computeNode.factories.ComputeNodeFactory;
 import cs4103.componenets.masterNode.MasterNode;
 import cs4103.componenets.network.NodeID;
@@ -96,6 +98,13 @@ public class SimulationModel extends Observable {
 		return this.m.getResult();
 	}
 
+	private void createResultPOPUP(int result) {
+		Object[] options = { "OK", };
+		JOptionPane.showOptionDialog(null, "Result is: " + result, "Result",
+				JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION, null,
+				options, options[0]);
+	}
+
 	/**
 	 * Creates a new {@link MasterNode} in a separate thread so the GUI does not
 	 * block
@@ -125,6 +134,7 @@ public class SimulationModel extends Observable {
 					}
 
 					int result = m.getResult();
+					createResultPOPUP(result);
 					logger.logToAll("Result is : " + result);
 					// logg any exceptions that have occured
 				} catch (DataException e) {
